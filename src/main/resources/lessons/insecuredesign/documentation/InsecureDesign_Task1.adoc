@@ -1,0 +1,20 @@
+== Task 1: Price Manipulation
+
+The WebGoat Store lets customers add items to a cart and submit an order. The developer
+stored the item price in an HTML form field so the server could read it back on submission:
+
+[source,java]
+----
+// Vulnerable: price comes directly from the HTTP request — the client controls it.
+@PostMapping("/InsecureDesign/task1")
+public AttackResult purchase(@RequestParam String productName,
+                             @RequestParam double price) {
+    processOrder(productName, price);   // no catalog lookup!
+    ...
+}
+----
+
+The form below submits `price=29.99`. Intercept the request (browser DevTools → Network tab,
+or an HTTP proxy) and change the price to *$0.00 or less* before it reaches the server.
+
+*Goal:* Get the server to confirm an order at a price of $0.00 or below.
