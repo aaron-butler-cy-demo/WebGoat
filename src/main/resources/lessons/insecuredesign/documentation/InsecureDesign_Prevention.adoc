@@ -1,0 +1,80 @@
+== Prevention
+
+=== Rule 1: Never trust client-supplied business values
+
+Prices, totals, discounts, roles, and other business-critical values must be derived on the
+server from authoritative data sources — never read from form fields, cookies, or query
+parameters.
+
+[source,java]
+----
+// UNSAFE — price comes from the request
+@PostMapping("/checkout")
+public AttackResult purchase(@RequestParam String productId,
+                             @RequestParam double price) { ... }
+
+// SAFE — price is fetched server-side from the catalog
+@PostMapping("/checkout")
+public AttackResult purchase(@RequestParam String productId) {
+    double price = catalog.getPriceById(productId);
+    ...
+}
+----
+
+=== Rule 2: Validate the sign and range of numeric inputs
+
+Always check that quantities, counts, and amounts are within the expected domain
+(positive, within a maximum, etc.) using explicit server-side assertions:
+
+[source,java]
+----
+if (quantity <= 0 || quantity > MAX_ORDER_QUANTITY) {
+    throw new IllegalArgumentException("Quantity must be between 1 and " + MAX_ORDER_QUANTITY);
+}
+----
+
+=== Rule 3: Apply threat modelling before writing code
+
+For each parameter accepted by an endpoint, ask:
+
+* What is the minimum and maximum valid value?
+* What does a value outside that range cause downstream?
+* Can a legitimate user ever send this value, or should the server derive it?
+
+Tools such as OWASP Threat Dragon or STRIDE can formalise this process.
+
+=== Rule 4: Write business logic tests for abuse cases
+
+Unit and integration tests should cover invalid inputs, not just happy paths:
+
+[source,java]
+----
+@Test void negativeQuantityIsRejected() {
+    mockMvc.perform(post("/checkout").param("quantity", "-5"))
+           .andExpect(jsonPath("$.lessonCompleted", is(false)));
+}
+----
+
+=== Summary
+
+[cols="1,1", options="header"]
+|===
+|Dangerous pattern |Safe alternative
+
+|Price/discount in a hidden form field
+|Server-side catalog lookup by product ID
+
+|No quantity bounds check
+|Explicit positive-integer validation before processing
+
+|Trusting client-supplied roles or flags
+|Load user roles from the session / database only
+
+|===
+
+=== References
+
+* https://owasp.org/Top10/A04_2021-Insecure_Design/[OWASP A04:2021 Insecure Design]
+* https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html[OWASP Input Validation Cheat Sheet]
+* https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/[OWASP WSTG: Business Logic Testing]
+* https://cwe.mitre.org/data/definitions/840.html[CWE-840: Business Logic Errors]

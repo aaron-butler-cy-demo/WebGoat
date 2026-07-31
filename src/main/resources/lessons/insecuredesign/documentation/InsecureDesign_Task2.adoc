@@ -1,0 +1,20 @@
+== Task 2: Negative Quantity Exploit
+
+The store was updated: prices are now hardcoded in the server. However, the developer forgot
+to validate that the *quantity* must be a positive number:
+
+[source,java]
+----
+// Vulnerable: quantity can be any integer, including negative values.
+@PostMapping("/InsecureDesign/task2")
+public AttackResult order(@RequestParam int quantity) {
+    double total = UNIT_PRICE * quantity;   // negative quantity → negative total
+    processOrder(total);
+    ...
+}
+----
+
+The form below submits `quantity=1`. Change the quantity to a *negative number* and observe
+what the server returns.
+
+*Goal:* Submit an order with a negative quantity and get the server to confirm it.

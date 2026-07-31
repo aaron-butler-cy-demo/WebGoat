@@ -1,0 +1,33 @@
+== OS Command Injection
+
+*OWASP Top 10 2021 — A03: Injection | CWE-78 / CWE-77*
+
+OS command injection (also called shell injection) occurs when an application incorporates
+user-supplied data into an operating-system command without proper sanitisation. An attacker
+who can control that input can append arbitrary commands that execute with the same OS-level
+privileges as the vulnerable application — often full filesystem read/write and network access.
+
+=== Why it matters
+
+Unlike SQL injection, which is confined to the database tier, OS command injection gives an
+attacker a foothold on the underlying server. From there they can:
+
+* Read sensitive files (`/etc/passwd`, application secrets, private keys)
+* Modify or delete files
+* Install backdoors or reverse shells
+* Pivot to other internal systems
+
+=== Real-world examples
+
+* *Shellshock (CVE-2014-6271)* — a bash vulnerability that let attackers inject commands
+  through HTTP headers in CGI applications
+* *Cisco ASA (CVE-2018-0101)* — command injection via crafted XML in a VPN service
+* Numerous IoT and router firmware vulnerabilities that expose management commands directly
+  to user input
+
+=== References
+
+* https://owasp.org/www-community/attacks/Command_Injection[OWASP: Command Injection]
+* https://cwe.mitre.org/data/definitions/78.html[CWE-78: OS Command Injection]
+* https://cwe.mitre.org/data/definitions/77.html[CWE-77: Command Injection]
+* https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html[OWASP Prevention Cheat Sheet]
