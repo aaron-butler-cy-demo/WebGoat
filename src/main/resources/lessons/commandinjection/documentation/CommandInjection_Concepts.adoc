@@ -1,0 +1,82 @@
+== How Command Injection Works
+
+Consider a server-side diagnostics tool that accepts a user-supplied IP address and pings it:
+
+[source,java]
+----
+// Vulnerable: user input is concatenated directly into a shell command string
+String shellCommand = "ping -c 1 " + ipAddress;
+String[] command    = {"sh", "-c", shellCommand};
+Runtime.getRuntime().exec(command);
+----
+
+When a legitimate user submits `192.168.1.1`, the shell executes:
+
+[source,bash]
+----
+ping -c 1 192.168.1.1
+----
+
+An attacker can abuse *command separators* to append additional commands after the intended one.
+Because the string is passed to `sh -c`, the shell interprets every metacharacter in it:
+
+[cols="1,2,2", options="header"]
+|===
+|Separator |Behaviour |Example input
+
+|`;`
+|Run first command, then second unconditionally
+|`192.168.1.1; whoami`
+
+|`&&`
+|Run second only if first exits successfully
+|`192.168.1.1 && id`
+
+|`\|`
+|Pipe stdout of first into second
+|`192.168.1.1 \| cat /etc/passwd`
+
+|`\|\|`
+|Run second only if first exits with an error
+|`999.0.0.1 \|\| id`
+
+|`%0a` (newline)
+|Start a new shell line (URL-encoded form)
+|`192.168.1.1%0awhoami`
+|===
+
+The resulting command for the `;` example becomes:
+
+[source,bash]
+----
+ping -c 1 192.168.1.1; whoami
+----
+
+The shell runs `ping`, then runs `whoami` and returns both outputs to the attacker.
+
+=== The root cause: using a shell interpreter
+
+The vulnerability exists specifically because the code wraps the command in `sh -c`.
+If the command were constructed without a shell, metacharacters would be treated as
+literal characters rather than instructions:
+
+[source,java]
+----
+// Safe: no shell involved — the semicolon in user input is treated as a literal character
+new ProcessBuilder("ping", "-c", "1", ipAddress).start();
+----
+
+=== Denylist filters don't work
+
+A common but ineffective defence is stripping known dangerous characters:
+
+[source,java]
+----
+String sanitized = input.replace(";", "").replace("&", "");
+----
+
+This fails because:
+
+* There are many separators (`;`, `|`, `\n`, backticks, `$(...)`, etc.)
+* Characters can be URL-encoded, double-encoded, or expressed in hex
+* The attacker only needs one bypass to succeed

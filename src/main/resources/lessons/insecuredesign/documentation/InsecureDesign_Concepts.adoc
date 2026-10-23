@@ -1,0 +1,39 @@
+== Key Concepts
+
+=== Trust boundary violation
+
+Every application has a *trust boundary* — the line between data the server controls and data
+that comes from outside. Prices, discounts, totals, and role names are business-critical values
+that must stay on the server side of that boundary.
+
+When a developer places a price in a hidden HTML form field and then reads it back on the server
+without verification, they have moved a security-critical decision from the server (trusted) to
+the browser (untrusted). An attacker with a browser proxy or developer tools can change that
+value before it is submitted.
+
+=== Threat modelling gap
+
+Insecure design usually has a simple root cause: the developer did not ask *"what happens if the
+user sends an unexpected value here?"* for every parameter. This is the purpose of threat
+modelling — identifying how each piece of data can be abused before writing any code.
+
+=== Business logic vs. validation
+
+Input validation (e.g., "is this a number?") is not the same as business logic validation
+(e.g., "is this a legitimate price for this product?"). A server can accept a perfectly well-
+formed double `−999.00` and still produce a catastrophically wrong result. Both layers are
+necessary.
+
+[cols="1,2,2", options="header"]
+|===
+|Layer |Example check |Who is responsible
+
+|Input validation
+|`price` is a valid decimal number
+|Framework / bean validation
+
+|Business logic validation
+|`price` matches the server-side catalog entry for `productName`
+|Application service layer
+
+|===

@@ -1,0 +1,35 @@
+== Insecure Design
+
+*OWASP Top 10 2021 — A04: Insecure Design | CWE-840 / CWE-841*
+
+Insecure design is a broad category representing weaknesses caused by missing or ineffective
+security controls that were never built in the first place. It is distinct from implementation
+bugs: you cannot fix a design flaw just by writing better code — the underlying concept must
+change.
+
+OWASP introduced A04 in the 2021 edition specifically to recognise that many vulnerabilities
+exist at the architecture and requirements level, not only at the code level.
+
+=== What does "design flaw" mean in practice?
+
+A design flaw is when the specification itself is insecure, regardless of whether the code
+implements that specification correctly. Examples:
+
+* A checkout flow where the price is sent from the browser — an attacker can change it before
+  the server sees it.
+* A password-reset flow that uses a guessable token.
+* An API that lets any authenticated user request any other user's data without an ownership
+  check.
+* A discount system with no cap, so a user can apply the same coupon hundreds of times.
+
+=== Goals
+
+The exercises on the following pages focus on *business logic* design flaws — a core sub-class
+of A04. You will exploit a shopping application that trusts the client for values it should
+compute itself server-side.
+
+=== References
+
+* https://owasp.org/Top10/A04_2021-Insecure_Design/[OWASP A04:2021 Insecure Design]
+* https://cwe.mitre.org/data/definitions/840.html[CWE-840: Business Logic Errors]
+* https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/[OWASP WSTG: Business Logic Testing]

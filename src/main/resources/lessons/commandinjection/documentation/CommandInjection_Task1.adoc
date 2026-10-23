@@ -1,0 +1,26 @@
+== Task 1: Basic Command Injection
+
+A server diagnostics panel lets administrators check network connectivity by pinging an IP address.
+The developer passed the user-supplied IP address directly to a shell command without sanitisation:
+
+[source,java]
+----
+// Vulnerable: user input concatenated into a shell command
+String shellCommand = "ping -c 1 " + ipAddress;
+String[] command    = {"sh", "-c", shellCommand};
+Runtime.getRuntime().exec(command);
+----
+
+A secret flag has been written to the following path on the server:
+
+[cols="1,2", options="header"]
+|===
+|OS |Flag file path
+
+|`operatingSystem:os[]`
+|`webGoatTempDir:temppath[]CommandInjection/flag.txt`
+
+|===
+
+*Goal:* Inject an OS command into the IP address field to read the flag file.
+The assignment is solved automatically when the flag value appears in the command output.

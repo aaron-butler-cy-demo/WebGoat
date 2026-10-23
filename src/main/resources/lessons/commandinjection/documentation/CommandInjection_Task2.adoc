@@ -1,0 +1,22 @@
+== Task 2: Filter Bypass
+
+After the previous incident the development team added a filter that removes semicolons from
+user input before building the DNS lookup command:
+
+[source,java]
+----
+// Naive denylist filter — strips semicolons only
+String sanitized    = hostname.replace(";", "");
+
+// Still vulnerable: | and || and URL-encoded newlines are not blocked
+String shellCommand = "nslookup " + sanitized;
+String[] command    = {"sh", "-c", shellCommand};
+Runtime.getRuntime().exec(command);
+----
+
+*Goal:* Bypass the semicolon filter and read the same flag file from Task 1.
+
+The flag file path is shown on the previous page. The assignment is solved when
+the flag value appears in the DNS lookup output.
+
+_Think: which other characters can separate commands in a Unix shell?_

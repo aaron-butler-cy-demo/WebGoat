@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -440,6 +442,13 @@
       <artifactId>spring-boot-properties-migrator</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <!-- Source: https://mvnrepository.com/artifact/org.a2aproject.sdk/a2a-java-sdk-server-common -->
+    <dependency>
+      <groupId>org.a2aproject.sdk</groupId>
+      <artifactId>a2a-java-sdk-server-common</artifactId>
+      <version>1.2.0.Final</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <repositories>
@@ -470,7 +479,8 @@
           <excludeDevtools>true</excludeDevtools>
           <executable>true</executable>
           <mainClass>org.owasp.webgoat.server.StartWebGoat</mainClass>
-          <!-- See http://docs.spring.io/spring-boot/docs/current/reference/html/howto-build.html#howto-extract-specific-libraries-when-an-executable-jar-runs -->
+          <!-- See
+          http://docs.spring.io/spring-boot/docs/current/reference/html/howto-build.html#howto-extract-specific-libraries-when-an-executable-jar-runs -->
           <requiresUnpack>
             <dependency>
               <groupId>org.asciidoctor</groupId>
@@ -545,12 +555,15 @@
         <configuration>
           <forkedProcessTimeoutInSeconds>600</forkedProcessTimeoutInSeconds>
           <!-- Necessary for vulnerable components lesson -->
-          <argLine>--enable-native-access=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens
-                        java.base/java.io=ALL-UNNAMED
-                        --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED
-                        --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED
-                        --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.desktop/java.awt.font=ALL-UNNAMED
-                        --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED</argLine>
+          <argLine>--enable-native-access=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED
+            --add-opens
+            java.base/java.io=ALL-UNNAMED
+            --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED
+            --add-opens java.base/java.util=ALL-UNNAMED --add-opens
+            java.base/java.lang.reflect=ALL-UNNAMED
+            --add-opens java.base/java.text=ALL-UNNAMED --add-opens
+            java.desktop/java.awt.font=ALL-UNNAMED
+            --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED</argLine>
           <excludes>
             <exclude>**/*IntegrationTest.java</exclude>
             <exclude>**/*UITest.java</exclude>
@@ -832,8 +845,10 @@
               <skipProvidedScope>false</skipProvidedScope>
               <skipRuntimeScope>false</skipRuntimeScope>
               <suppressionFiles>
-                <!--suppress UnresolvedMavenProperty -->
-                <suppressionFile>${maven.multiModuleProjectDirectory}/config/dependency-check/project-suppression.xml</suppressionFile>
+                <!--suppress
+                UnresolvedMavenProperty -->
+                <suppressionFile>
+                  ${maven.multiModuleProjectDirectory}/config/dependency-check/project-suppression.xml</suppressionFile>
               </suppressionFiles>
             </configuration>
             <executions>
@@ -861,13 +876,14 @@
             <version>${maven-surefire-plugin.version}</version>
             <configuration>
               <argLine>--add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens
-                                java.base/java.io=ALL-UNNAMED
-                                --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED
-                                --add-opens java.base/java.util=ALL-UNNAMED --add-opens
-                                java.base/java.lang.reflect=ALL-UNNAMED
-                                --add-opens java.base/java.text=ALL-UNNAMED --add-opens
-                                java.desktop/java.awt.font=ALL-UNNAMED
-                                ${surefire.jacoco.args}</argLine>
+                java.base/java.io=ALL-UNNAMED
+                --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens
+                java.base/java.io=ALL-UNNAMED
+                --add-opens java.base/java.util=ALL-UNNAMED --add-opens
+                java.base/java.lang.reflect=ALL-UNNAMED
+                --add-opens java.base/java.text=ALL-UNNAMED --add-opens
+                java.desktop/java.awt.font=ALL-UNNAMED
+                ${surefire.jacoco.args}</argLine>
               <excludes>
                 <exclude>**/*IntegrationTest.java</exclude>
                 <exclude>src/it/java</exclude>
@@ -918,7 +934,8 @@
                 <phase>test</phase>
                 <configuration>
                   <dataFile>${project.build.directory}/jacoco/jacoco-ut.exec</dataFile>
-                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-unit-test-coverage-report</outputDirectory>
+                  <outputDirectory>
+                    ${project.reporting.outputDirectory}/jacoco-unit-test-coverage-report</outputDirectory>
                 </configuration>
               </execution>
             </executions>
