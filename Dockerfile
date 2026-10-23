@@ -9,7 +9,7 @@ RUN \
   chgrp -R 0 /home/webgoat && \
   chmod -R g=u /home/webgoat
 
-USER webgoat
+USER root
 
 COPY --chown=webgoat target/webgoat-*.jar /home/webgoat/webgoat.jar
 
