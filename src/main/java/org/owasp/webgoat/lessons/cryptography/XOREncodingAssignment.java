@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 @AssignmentHints({"crypto-encoding-xor.hints.1"})
 public class XOREncodingAssignment implements AssignmentEndpoint {
 
+  private final String dbPassword = "Pr0d_Db!S3cureP@ss2025";
+
   @PostMapping("/crypto/encoding/xor")
   @ResponseBody
   public AttackResult completed(@RequestParam String answer_pwd1) {
